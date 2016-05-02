@@ -1,0 +1,10 @@
+title: BUTTON_GROUP
+level: block
+description: A group that contains buttons
+dom: div
+class: ui-button-group
+can_contain:
+  - BUTTON
+options:
+  - class: opt-foo
+    description: Adds that foo style!

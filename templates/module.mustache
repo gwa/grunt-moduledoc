@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{{module.title}}</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/prism.css">
+</head>
+<body>
+  <nav>
+    <ul>
+      {{#modules}}
+      <li><a href="{{.}}.html">{{.}}</a></li>
+      {{/modules}}
+    </ul>
+  </nav>
+  <article>
+    {{#if module}}
+
+    <h1>{{module.title}}</h1>
+    {{#if module.description}}
+    <div class="description">{{module.description}}</div>
+    {{/if}}
+    <pre><code class="language-markup">&lt;{{module.dom}} class=&quot;{{module.class}}&quot;&gt;
+  ...
+&lt;/{{module.dom}}&gt;</code></pre>
+
+    {{#if module.options.length}}
+    <h2>Options</h2>
+    <table>
+    {{#module.options}}
+      <tr>
+        <td><code>{{class}}</code></td>
+        <td>{{description}}</td>
+      </tr>
+    {{/module.options}}
+    </table>
+    {{/if}}
+
+    {{#if module.must_contain.length}}
+    <h2>Must contain</h2>
+    <ul>
+    {{#each module.must_contain}}
+      <li><a href="{{this}}.html">{{this}}</a></li>
+    {{/each}}
+    </ul>
+    {{/if}}
+
+    {{#if module.can_contain.length}}
+    <h2>Can contain</h2>
+    <ul>
+    {{#each module.can_contain}}
+      <li><a href="{{this}}.html">{{this}}</a></li>
+    {{/each}}
+    </ul>
+    {{/if}}
+
+    {{/if}}
+
+  </article>
+  <script src="assets/prism.js"></script>
+</body>
+</html>
