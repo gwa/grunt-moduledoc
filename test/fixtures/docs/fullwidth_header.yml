@@ -1,0 +1,8 @@
+title: FULLWIDTH_HEADER
+description: A header.
+dom: section
+class: ui-fullwidth-header
+contains:
+  - HEADLINE
+  - COPY ?
+  - BUTTON ?

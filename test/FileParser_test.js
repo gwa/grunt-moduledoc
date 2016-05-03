@@ -40,7 +40,7 @@ exports.FileParser = {
   parseTitle: function(test) {
     var filepath, parser, parsed;
 
-    test.expect(4);
+    test.expect(7);
 
     // ----
 
@@ -49,8 +49,11 @@ exports.FileParser = {
     parsed = parser.parse();
 
     test.equal(parsed.title, 'BUTTON_GROUP', 'Can parse the title.');
-    test.equal(parsed.can_contain[0], 'BUTTON', 'Can parse the can_contain list.');
-    test.equal(parsed.can_contain.length, 1, 'Can parse the can_contain list.');
+    test.equal(parsed.contains[0].data, 'BUTTON', 'Can parse a contained module name.');
+    test.equal(parsed.contains[0].module, true, 'Can parse a contained module type.');
+    test.equal(parsed.contains[0].frequency, '+', 'Can parse a module frequency.');
+    test.equal(parsed.contains[0].frequency_str, 'multiple', 'Can return a contained frequency str.');
+    test.equal(parsed.contains.length, 1, 'Can parse the can_contain list.');
 
     // ----
 

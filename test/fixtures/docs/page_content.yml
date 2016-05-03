@@ -1,0 +1,6 @@
+title: PAGE_CONTENT
+description: A group that contains button groups.
+dom: section
+class: ui-page-content
+can_contain:
+  - FULLWIDTH_HEADER

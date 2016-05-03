@@ -21,19 +21,20 @@ module.exports = function(grunt) {
   grunt.registerMultiTask('moduledoc', 'Creates a frontend module documentation', function() {
     // Merge task-specific and/or target-specific options with these defaults.
     var
-      modulenames = [],
-      moduledata = [],
       options = this.options({
         templatepath: path.join(__dirname, '../templates/module.mustache'),
         assetspath:   path.join(__dirname, '../templates/assets'),
-      }),
-      i,
-      l,
-      generator,
-      filepath;
+      });
 
     // Iterate over all specified file groups.
     this.files.forEach(function(f) {
+
+      var modulenames = [],
+        moduledata = [],
+        i,
+        l,
+        generator,
+        filepath;
 
       f.src.filter(function(filepath) {
         return grunt.file.isFile(filepath);
@@ -44,6 +45,10 @@ module.exports = function(grunt) {
         modulenames.push(data.title);
         moduledata.push(data);
       });
+
+      if (!moduledata.length) {
+        return;
+      }
 
       for (i = 0, l = moduledata.length; i < l; i++) {
         filepath = path.join(f.dest, './' + moduledata[i].title + '.html');
@@ -66,4 +71,56 @@ function createFile(grunt, moduledata, modules, filepath, templatepath) {
   var generator = new HTMLGenerator(moduledata, modules);
   grunt.file.write(filepath, generator.generate(templatepath));
   grunt.log.writeln('File "' + filepath + '" created.');
+}
+
+/**
+ * Returns a list of modules that are not contained by any other module.
+ */
+function getTopLevel(moduledata) {
+  var i,
+    l,
+    contained = [],
+    notcontained = [];
+
+  // get list of all "contained" modules
+  for (i = 0, l= moduledata.length; i < l; i++) {
+    contained = arrayMerge(contained, moduledata[i].must_contain);
+    contained = arrayMerge(contained, moduledata[i].can_contain);
+  }
+  // get modules that are NOT contained
+  for (i = 0, l= moduledata.length; i < l; i++) {
+    if (!inArray(contained, moduledata[i].title)) {
+      notcontained.push(moduledata[i]);
+    }
+  }
+
+  return notcontained;
+}
+
+function arrayMerge(target, source) {
+  var i = 0, l;
+
+  if (!source) {
+    return target;
+  }
+
+  l = source.length;
+
+  for (; i < l; i++) {
+    if (!inArray(target, source[i])) {
+      target.push(source[i]);
+    }
+  }
+
+  return target;
+}
+
+function inArray(target, value) {
+  var i = 0, l = target.length;
+  for (; i < l; i++) {
+    if (target[i] === value) {
+      return true;
+    }
+  }
+  return false;
 }

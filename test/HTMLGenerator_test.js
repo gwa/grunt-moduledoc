@@ -51,12 +51,12 @@ exports.HTMLGenerator = {
       options: [
         {class: 'opt-foo', description: 'Adds that foo style!'}
       ],
-      can_contain: [
-        'BUTTON'
+      contains: [
+        {module: true, data: 'BUTTON', frequency: '+', frequency_str: 'multiple'}
       ]
     };
 
-    modules = ['BUTTON', 'BUTTON_GROUP'];
+    modules = ['BUTTON', 'BUTTON_GROUP', 'FULLWIDTH_HEADER', 'PAGE_CONTENT'];
 
     generator = new HTMLGenerator(moduledata, modules);
     templatepath = path.join(__dirname, '../templates/module.mustache');

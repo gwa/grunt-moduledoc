@@ -2,12 +2,13 @@
 <html>
 <head>
   <title>{{module.title}}</title>
-  <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/prism.css">
+  <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
   <nav>
     <ul>
+      <li class="home"><a href="index.html">[Home]</a></li>
       {{#modules}}
       <li><a href="{{.}}.html">{{.}}</a></li>
       {{/modules}}
@@ -36,20 +37,22 @@
     </table>
     {{/if}}
 
-    {{#if module.must_contain.length}}
-    <h2>Must contain</h2>
+    {{#if module.contains.length}}
+    <h2>Contains</h2>
     <ul>
-    {{#each module.must_contain}}
-      <li><a href="{{this}}.html">{{this}}</a></li>
-    {{/each}}
-    </ul>
-    {{/if}}
-
-    {{#if module.can_contain.length}}
-    <h2>Can contain</h2>
-    <ul>
-    {{#each module.can_contain}}
-      <li><a href="{{this}}.html">{{this}}</a></li>
+    {{#each module.contains}}
+      <li>
+      {{#if this.module }}
+        <a href="{{this.data}}.html">
+          {{this.data}}
+          {{#if this.frequency_str}}
+          <span class="frequency">[{{this.frequency_str}}]</span>
+          {{/if}}
+        </a>
+      {{else}}
+        <span class="literal-data">{{this.data}}</data>
+      {{/if}}
+      </li>
     {{/each}}
     </ul>
     {{/if}}
