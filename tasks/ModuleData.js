@@ -68,20 +68,14 @@ ModuleData.prototype.getOptions = function() {
         this.options[this.optionsindex[opts[j].class]].modules.push(this.moduledata[i].title);
       }
     }
+
+    // sort
+    this.options = this.options.sort(function(a, b) {
+      if(a.class < b.class) return -1;
+      if(a.class > b.class) return 1;
+      return 0;
+    });
   }
 
   return this.options;
-}
-
-/**
- * Replace with utils.inArray when merged
- */
-function inArray(target, value) {
-    var i = 0, l = target.length;
-    for (; i < l; i++) {
-      if (target[i] === value) {
-        return true;
-      }
-    }
-    return false;
 }
