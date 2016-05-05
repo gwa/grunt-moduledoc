@@ -6,3 +6,8 @@ contains:
   - HEADLINE
   - COPY ?
   - BUTTON ?
+options:
+  - class: opt-dark
+    description: Dark background with white text
+  - class: opt-foo
+    description: Adds that foo style!

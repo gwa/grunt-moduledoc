@@ -14,9 +14,13 @@ function HTMLGenerator(module, moduledata) {
   this.moduledata = moduledata;
 
   this.context = {
-    module:  this.module,
-    modules: this.moduledata ? this.moduledata.getModuleNames() : []
+    module:  this.module
   };
+
+  if (this.moduledata) {
+    this.context.modules = moduledata.getModules();
+    this.context.optionslist = moduledata.getOptions();
+  }
 }
 
 HTMLGenerator.prototype.generate = function(templatepath) {

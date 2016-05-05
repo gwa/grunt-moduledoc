@@ -10,7 +10,7 @@
     <ul>
       <li class="home"><a href="index.html">[Home]</a></li>
       {{#modules}}
-      <li><a href="{{.}}.html">{{.}}</a></li>
+      <li><a href="{{this.title}}.html">{{this.title}}</a></li>
       {{/modules}}
     </ul>
   </nav>
@@ -56,6 +56,24 @@
     {{/each}}
     </ul>
     {{/if}}
+
+    {{else}}
+
+    <h1>moduledoc</h1>
+
+    <h2>Options</h2>
+    <ul>
+    {{#each optionslist}}
+      <li>
+        <code>{{this.class}}</code>
+        <ul>
+        {{#each this.modules}}
+          <li><a href="{{this}}.html">{{this}}</a></li>
+        {{/each}}
+        </ul>
+      </li>
+    {{/each}}
+    </ul>
 
     {{/if}}
 

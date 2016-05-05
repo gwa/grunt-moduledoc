@@ -44,4 +44,31 @@ exports.ModuleData = {
 
     test.done();
   },
+
+  getOptionsList: function(test) {
+    test.expect(1);
+
+    var arr = [
+      {
+        title: 'FOO_MODULE',
+        options: [
+          {class: 'opt-foo', description: 'foo'}
+        ]
+      },
+      {
+        title: 'BAZ_MODULE',
+        options: [
+          {class: 'opt-foo', description: 'bar'}
+        ]
+      }
+    ];
+
+    var data = new ModuleData(arr);
+
+    var options = data.getOptions();
+
+    test.equal(2, options[0].modules.length, 'Extracts options from modules.');
+
+    test.done();
+  },
 };

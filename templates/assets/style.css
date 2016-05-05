@@ -100,6 +100,7 @@ td {
   padding-bottom: 5px;
 }
 
+ul code,
 td code {
   font-family: 'Ubuntu Mono', Consolas, Monaco, 'Andale Mono', monospace;
   color: #07a;
