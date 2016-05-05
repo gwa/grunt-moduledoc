@@ -3,6 +3,7 @@
 var fs = require('fs');
 var path = require('path');
 var HTMLGenerator = require('../tasks/HTMLGenerator');
+var ModuleData = require('../tasks/ModuleData');
 
 /*
   ======== A Handy Little Nodeunit Reference ========
@@ -39,11 +40,11 @@ exports.HTMLGenerator = {
   },
 
   generate: function(test) {
-    var moduledata, modules, templatepath, generator, markup, expected;
+    var moduledata, mod, templatepath, generator, markup, expected;
 
     test.expect(1);
 
-    moduledata = {
+    mod = {
       title: 'BUTTON_GROUP',
       description: 'A group that contains buttons',
       dom: 'div',
@@ -56,9 +57,14 @@ exports.HTMLGenerator = {
       ]
     };
 
-    modules = ['BUTTON', 'BUTTON_GROUP', 'FULLWIDTH_HEADER', 'PAGE_CONTENT'];
+    moduledata = new ModuleData([
+      {title: 'BUTTON'},
+      {title: 'BUTTON_GROUP'},
+      {title: 'FULLWIDTH_HEADER'},
+      {title: 'PAGE_CONTENT'}
+    ]);
 
-    generator = new HTMLGenerator(moduledata, modules);
+    generator = new HTMLGenerator(mod, moduledata);
     templatepath = path.join(__dirname, '../templates/module.mustache');
     markup = generator.generate(templatepath);
     expected = fs.readFileSync(

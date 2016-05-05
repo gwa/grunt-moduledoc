@@ -9,9 +9,14 @@ var handlebars = require('handlebars');
 
 module.exports = HTMLGenerator;
 
-function HTMLGenerator(data, modules) {
-  this.data = data;
-  this.modules = modules;
+function HTMLGenerator(module, moduledata) {
+  this.module = module;
+  this.moduledata = moduledata;
+
+  this.context = {
+    module:  this.module,
+    modules: this.moduledata ? this.moduledata.getModuleNames() : []
+  };
 }
 
 HTMLGenerator.prototype.generate = function(templatepath) {
@@ -21,9 +26,6 @@ HTMLGenerator.prototype.generate = function(templatepath) {
   template = handlebars.compile(source);
 
   return template(
-    {
-      module: this.data,
-      modules: this.modules
-    }
+    this.context
   );
 }

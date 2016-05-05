@@ -8,9 +8,11 @@
 
 'use strict';
 
-var path = require('path');
-var fse = require('fs-extra');
-var FileParser = require('./FileParser');
+var path          = require('path');
+var fse           = require('fs-extra');
+
+var FileParser    = require('./FileParser');
+var ModuleData    = require('./ModuleData');
 var HTMLGenerator = require('./HTMLGenerator');
 
 module.exports = function(grunt) {
@@ -22,15 +24,15 @@ module.exports = function(grunt) {
     // Merge task-specific and/or target-specific options with these defaults.
     var
       options = this.options({
-        templatepath: path.join(__dirname, '../templates/module.mustache'),
+        templatepath: path.join(__dirname, '../templates'),
         assetspath:   path.join(__dirname, '../templates/assets'),
       });
 
     // Iterate over all specified file groups.
     this.files.forEach(function(f) {
 
-      var modulenames = [],
-        moduledata = [],
+      var arr = [],
+        moduledata,
         i,
         l,
         generator,
@@ -42,22 +44,18 @@ module.exports = function(grunt) {
         var parser, data, markup;
         parser = new FileParser(filepath);
         data = parser.parse();
-        modulenames.push(data.title);
-        moduledata.push(data);
+
+        arr.push(data);
       });
 
-      if (!moduledata.length) {
+      if (!arr.length) {
         return;
       }
 
-      for (i = 0, l = moduledata.length; i < l; i++) {
-        filepath = path.join(f.dest, './' + moduledata[i].title + '.html');
-        createFile(grunt, moduledata[i], modulenames, filepath, options.templatepath);
-      }
+      moduledata = new ModuleData(arr);
 
-      // create index
-      filepath = path.join(f.dest, './index.html');
-      createFile(grunt, null, modulenames, filepath, options.templatepath);
+      createModulePages(grunt, moduledata, options.templatepath, f.dest);
+      createIndexPage(grunt, moduledata, options.templatepath, f.dest);
 
       // copy assets
       fse.copySync(options.assetspath, path.join(f.dest, './assets'));
@@ -67,8 +65,29 @@ module.exports = function(grunt) {
 
 };
 
-function createFile(grunt, moduledata, modules, filepath, templatepath) {
-  var generator = new HTMLGenerator(moduledata, modules);
+function createModulePages(grunt, moduledata, templatedir, targetdir) {
+  var i,
+    l,
+    modules = moduledata.getModules(),
+    templatepath = path.join(templatedir, 'module.mustache'),
+    filepath;
+
+  for (i = 0, l = modules.length; i < l; i++) {
+    filepath = path.join(targetdir, './' + modules[i].title + '.html');
+    createFile(grunt, modules[i], moduledata, filepath, templatepath);
+  }
+}
+
+function createIndexPage(grunt, moduledata, templatedir, targetdir) {
+  var templatepath = path.join(templatedir, 'module.mustache'),
+    filepath = path.join(targetdir, './index.html');
+
+  createFile(grunt, null, moduledata, filepath, templatepath);
+}
+
+function createFile(grunt, module, moduledata, filepath, templatepath) {
+  var generator = new HTMLGenerator(module, moduledata);
+
   grunt.file.write(filepath, generator.generate(templatepath));
   grunt.log.writeln('File "' + filepath + '" created.');
 }
