@@ -18,8 +18,9 @@ function HTMLGenerator(module, moduledata) {
   };
 
   if (this.moduledata) {
-    this.context.modules = moduledata.getModules();
+    this.context.modules     = moduledata.getModules();
     this.context.optionslist = moduledata.getOptions();
+    this.context.tree        = renderTree(moduledata.getTree(), true);
   }
 }
 
@@ -32,4 +33,28 @@ HTMLGenerator.prototype.generate = function(templatepath) {
   return template(
     this.context
   );
+}
+
+/**
+ * @param {array} tree
+ * @param {boolean} isbase
+ * @return string
+ */
+function renderTree(tree, isbase) {
+  var i, l, markup;
+
+  if (!tree || !tree.length) {
+    return '';
+  }
+
+  markup = isbase ? '<ul class="ui-tree">' : '<ul>';
+  for (i = 0, l = tree.length; i < l; i++) {
+    markup += '<li>'
+    markup += '<a href="' +tree[i].title+ '.html">' +tree[i].title+ '</a>'
+    markup += renderTree(tree[i].contains);
+    markup += '</li>';
+  }
+  markup += '</ul>';
+
+  return markup;
 }

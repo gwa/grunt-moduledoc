@@ -14,6 +14,7 @@ var fse           = require('fs-extra');
 var FileParser    = require('./FileParser');
 var ModuleData    = require('./ModuleData');
 var HTMLGenerator = require('./HTMLGenerator');
+var utils = require('./utils');
 
 module.exports = function(grunt) {
 
@@ -90,56 +91,4 @@ function createFile(grunt, module, moduledata, filepath, templatepath) {
 
   grunt.file.write(filepath, generator.generate(templatepath));
   grunt.log.writeln('File "' + filepath + '" created.');
-}
-
-/**
- * Returns a list of modules that are not contained by any other module.
- */
-function getTopLevel(moduledata) {
-  var i,
-    l,
-    contained = [],
-    notcontained = [];
-
-  // get list of all "contained" modules
-  for (i = 0, l= moduledata.length; i < l; i++) {
-    contained = arrayMerge(contained, moduledata[i].must_contain);
-    contained = arrayMerge(contained, moduledata[i].can_contain);
-  }
-  // get modules that are NOT contained
-  for (i = 0, l= moduledata.length; i < l; i++) {
-    if (!inArray(contained, moduledata[i].title)) {
-      notcontained.push(moduledata[i]);
-    }
-  }
-
-  return notcontained;
-}
-
-function arrayMerge(target, source) {
-  var i = 0, l;
-
-  if (!source) {
-    return target;
-  }
-
-  l = source.length;
-
-  for (; i < l; i++) {
-    if (!inArray(target, source[i])) {
-      target.push(source[i]);
-    }
-  }
-
-  return target;
-}
-
-function inArray(target, value) {
-  var i = 0, l = target.length;
-  for (; i < l; i++) {
-    if (target[i] === value) {
-      return true;
-    }
-  }
-  return false;
 }

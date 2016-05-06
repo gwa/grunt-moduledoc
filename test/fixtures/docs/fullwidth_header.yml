@@ -5,7 +5,7 @@ class: ui-fullwidth-header
 contains:
   - HEADLINE
   - COPY ?
-  - BUTTON ?
+  - BUTTON_GROUP ?
 options:
   - class: opt-dark
     description: Dark background with white text

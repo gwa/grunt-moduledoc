@@ -1,5 +1,7 @@
 'use strict';
 
+var utils = require('./utils');
+
 module.exports = ModuleData;
 
 /**
@@ -14,6 +16,9 @@ function ModuleData(moduledata) {
 
   this.options = undefined;
   this.optionsindex = [];
+
+  this.toplevel = undefined;
+  this.tree = undefined;
 
   var i = 0, l = this.moduledata.length;
   for (; i < l; i++) {
@@ -47,6 +52,7 @@ ModuleData.prototype.getModule = function(name) {
 }
 
 /**
+ * @todo refactor
  * @return {array}
  */
 ModuleData.prototype.getOptions = function() {
@@ -78,4 +84,91 @@ ModuleData.prototype.getOptions = function() {
   }
 
   return this.options;
+}
+
+/**
+ * Returns a list of modules that are not contained by any other module.
+ */
+ModuleData.prototype.getTopLevelModules = function() {
+  var i,
+    l,
+    j,
+    m,
+    contained = [],
+    notcontained = [],
+    mod;
+
+  if (!this.toplevel) {
+    // get list of all "contained" modules
+    for (i = 0, l = this.moduledata.length; i < l; i++) {
+      mod = this.moduledata[i];
+      if (mod.contains) {
+        for (j = 0, m = mod.contains.length; j < m; j++) {
+          if (mod.contains[j].module === true) {
+            contained.push(mod.contains[j].data);
+          }
+        }
+      }
+    }
+
+    // get modules that are NOT contained
+    for (i = 0, l= this.moduledata.length; i < l; i++) {
+      if (!utils.inArray(contained, this.moduledata[i].title)) {
+        notcontained.push(this.moduledata[i]);
+      }
+    }
+
+    this.toplevel = notcontained;
+  }
+
+  return this.toplevel;
+};
+
+/**
+ * @return {array}
+ */
+ModuleData.prototype.getTree = function() {
+  var tl, toplevel, i, l;
+
+  if (!this.tree) {
+    this.tree = [];
+
+    tl = this.getTopLevelModules();
+    for (i = 0, l = tl.length; i < l; i++) {
+      this.tree.push(getContainedBranch(tl[i], this));
+    }
+  }
+
+  return this.tree;
+}
+
+function getContainedBranch(module, moduledata) {
+  var i, l, contained = [], name, mod;
+
+  if (!module) {
+    return;
+  }
+
+  if (module.contains) {
+    for (i = 0, l = module.contains.length; i < l; i++) {
+      if (module.contains[i].module === true) {
+        name = module.contains[i].data;
+        mod = moduledata.getModule(name);
+
+        if (mod) {
+          contained.push(
+            getContainedBranch(
+              mod,
+              moduledata
+            )
+          );
+        }
+      }
+    }
+  }
+
+  return {
+    title: module.title,
+    contains: contained
+  }
 }

@@ -71,4 +71,73 @@ exports.ModuleData = {
 
     test.done();
   },
+
+  getTopLevelModules: function(test) {
+    test.expect(3);
+
+    var arr = [
+      {
+        title: 'FOO_MODULE',
+        contains: [
+          {module: true, data: 'BAZ_MODULE'},
+          {module: false, data: 'simple markup'},
+        ]
+      },
+      {
+        title: 'BAZ_MODULE',
+        contains: [
+          {module: true, data: 'BAR_MODULE'},
+        ]
+      },
+      {
+        title: 'TOP_MODULE'
+      }
+    ];
+
+    var data = new ModuleData(arr);
+
+    var toplevel = data.getTopLevelModules();
+
+    test.equal(2, toplevel.length, 'Extracts the top level modules.');
+    test.equal('FOO_MODULE', toplevel[0].title, 'Extracts the top level modules.');
+    test.equal('TOP_MODULE', toplevel[1].title, 'Extracts the top level modules.');
+
+    test.done();
+  },
+
+  getTree: function(test) {
+    test.expect(3);
+
+    var arr = [
+      {
+        title: 'FOO_MODULE',
+        contains: [
+          {module: true, data: 'BAZ_MODULE'},
+          {module: false, data: 'simple markup'},
+        ]
+      },
+      {
+        title: 'BAZ_MODULE',
+        contains: [
+          {module: true, data: 'BAR_MODULE'},
+        ]
+      },
+      {
+        title: 'TOP_MODULE'
+      },
+      {
+        title: 'BAR_MODULE'
+      }
+    ];
+
+    var data = new ModuleData(arr);
+
+    var tree = data.getTree();
+
+    test.equal(2, tree.length, 'Extracts the top level modules.');
+    test.equal('FOO_MODULE', tree[0].title, 'Extracts the top level modules.');
+    test.equal(1, tree[0].contains.length);
+
+    test.done();
+  },
 };

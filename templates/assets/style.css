@@ -114,3 +114,47 @@ pre[class*="language-"] {
 span.literal-data {
   color: #999;
 }
+
+.ui-two-column {
+  margin-left: -10px;
+  margin-right: -10px;
+  overflow: hidden;
+}
+
+.ui-two-column .ui-col {
+  float: left;
+  width: 50%;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+ul.ui-tree,
+ul.ui-tree ul,
+ul.ui-options,
+ul.ui-options ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+ul.ui-tree ul,
+ul.ui-options ul {
+  margin-left: 5px;
+  margin-top: 5px;
+}
+
+ul.ui-tree li {
+  position: relative;
+  padding-left: 12px;
+}
+
+ul.ui-tree li:before {
+  content: "";
+  position: absolute;
+  top: 5px;
+  left: 0;
+  width: 6px;
+  height: 8px;
+  border-left: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}
