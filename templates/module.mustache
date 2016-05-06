@@ -21,8 +21,8 @@
     {{#if module.description}}
     <div class="description">{{module.description}}</div>
     {{/if}}
-    <pre><code class="language-markup">&lt;{{module.dom}} class=&quot;{{module.class}}&quot;&gt;
-  ...
+    <pre><code class="language-markup">&lt;{{module.dom}}{{#if module.class}} class=&quot;{{module.class}}&quot;{{/if}}&gt;
+  {{#if module.dom_inner}}&lt;{{module.dom_inner}}&gt;...&lt;/{{module.dom_inner}}&gt;{{else}}...{{/if}}
 &lt;/{{module.dom}}&gt;</code></pre>
 
     {{#if module.options.length}}

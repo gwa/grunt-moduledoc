@@ -25,7 +25,26 @@ FileParser.prototype.parse = function() {
     }
   );
 
-  return parseContains(data);
+  data = parseDOM(data);
+  data = parseContains(data);
+
+  return data;
+}
+
+function parseDOM(data) {
+  var dom = data.dom, arr;
+
+  if (!dom) {
+    data.dom = 'div';
+    return data;
+  }
+
+  arr = data.dom.split('>');
+
+  data.dom = arr[0];
+  data.dom_inner = arr[1] ? arr[1] : null;
+
+  return data;
 }
 
 function parseContains(data) {
