@@ -1,7 +1,7 @@
 {
   "name": "grunt-moduledoc",
   "description": "Creates a frontend module documentation",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "homepage": "https://github.com/gwa/grunt-moduledoc",
   "author": {
     "name": "Timothy Groves",
