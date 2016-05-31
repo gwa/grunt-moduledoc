@@ -48,6 +48,7 @@ exports.HTMLGenerator = {
       title: 'BUTTON_GROUP',
       description: 'A group that contains buttons',
       dom: 'div',
+      dom_inner: '...',
       class: 'ui-button-group',
       options: [
         {class: 'opt-foo', description: 'Adds that foo style!'}

@@ -1,5 +1,5 @@
 title: BUTTON
 class: ui-button
-dom: a>span
+dom: a>span>strong.foo
 contains:
   - text

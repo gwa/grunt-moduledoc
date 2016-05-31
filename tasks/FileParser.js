@@ -42,9 +42,41 @@ function parseDOM(data) {
   arr = data.dom.split('>');
 
   data.dom = arr[0];
-  data.dom_inner = arr[1] ? arr[1] : null;
+  data.dom_inner = parseDOMInner(arr);
 
   return data;
+}
+
+function parseDOMInner(arr) {
+  var i = 1,
+    l = arr.length,
+    dom,
+    str = '%%';
+
+  for (; i < l; i++) {
+    str = parseDOMInnerElement(arr[i], str);
+  }
+
+  return str.replace('%%', '...');
+}
+
+function parseDOMInnerElement(dom, str)
+{
+  var open = dom,
+    close = dom,
+    ind = dom.indexOf('.'),
+    arr;
+
+  if (ind === 0) {
+    open = 'div class="' + dom.substring(1) + '"';
+    close = 'div';
+  } else if (ind > 0) {
+    arr = dom.split('.');
+    open = arr[0] + ' class="' + arr[1] + '"';
+    close = arr[0];
+  }
+
+  return str.replace('%%', '&lt;' + open + '&gt; %% &lt;/' + close + '&gt;');
 }
 
 function parseContains(data) {
