@@ -148,13 +148,31 @@ ul.ui-tree li {
   padding-left: 12px;
 }
 
-ul.ui-tree li:before {
-  content: "";
+ul.ui-tree span {
   position: absolute;
   top: 5px;
   left: 0;
+  width: 10px;
+  height: 16px;
+}
+
+ul.ui-tree span:before {
+  content: "";
+  display: block;
   width: 6px;
   height: 8px;
   border-left: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
+}
+
+ul.ui-tree li.open > span:before {
+  border-color: #999;
+}
+
+ul.ui-tree li ul {
+  display: none;
+}
+
+ul.ui-tree li.open > ul {
+  display: block;
 }
