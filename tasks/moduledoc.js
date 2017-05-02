@@ -32,28 +32,36 @@ module.exports = function(grunt) {
     // Iterate over all specified file groups.
     this.files.forEach(function(f) {
 
-      var arr = [],
+      var
+        parsers = [],
+        arr = [],
+        i = 0,
         moduledata,
-        i,
-        l,
         generator,
         filepath;
 
+      // Get a FileParser for each yml file.
       f.src.filter(function(filepath) {
         return grunt.file.isFile(filepath);
       }).map(function(filepath) {
-        var parser, data, markup;
-        parser = new FileParser(filepath);
-        data = parser.parse();
+        var parser;
+        parser = new FileParser(filepath, parsers);
+        parser.load();
 
-        arr.push(data);
+        parsers[parser.getTitle()] = parser;
+        i++;
       });
 
-      if (!arr.length) {
+      if (i === 0) {
         return;
       }
 
-      // Sort alphabetically
+      // Actually parse the data for each file.
+      for (i in parsers) {
+        arr.push(parsers[i].parse());
+      }
+
+      // Sort modules alphabetically by title.
       arr.sort(compare);
 
       moduledata = new ModuleData(arr);

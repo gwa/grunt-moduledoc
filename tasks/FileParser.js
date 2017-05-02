@@ -9,29 +9,56 @@ var yaml = require('js-yaml');
 
 module.exports = FileParser;
 
-function FileParser(path) {
+function FileParser(path, parsers) {
   this.path = path;
+  this.parsers = parsers;
+  this.data = null;
 }
 
-FileParser.prototype.parse = function() {
-  var yaml_data, json, data;
+FileParser.prototype.load = function() {
+  var yaml_data, data;
 
   yaml_data = fs.readFileSync(this.path, 'UTF-8');
 
-  data = yaml.safeLoad(
+  this.data = yaml.safeLoad(
     yaml_data,
     {
       filename: this.path
     }
   );
 
-  data = parseDOM(data);
-  data = parseContains(data);
-
-  return data;
+  return this.data;
 }
 
-function parseDOM(data) {
+FileParser.prototype.parse = function() {
+  this.data = parseDOM(this.data, this.parsers);
+  this.data = parseContains(this.data);
+
+  return this.data;
+}
+
+/**
+ * @return {String}
+ */
+FileParser.prototype.getTitle = function() {
+  return this.data.title;
+}
+
+/**
+ * @return {String}
+ */
+FileParser.prototype.getDOM = function() {
+  return this.data.dom;
+}
+
+/**
+ * @return {String}
+ */
+FileParser.prototype.getClass = function() {
+  return this.data.class;
+}
+
+function parseDOM(data, parsers) {
   var dom = data.dom, arr;
 
   if (!dom) {
@@ -42,30 +69,70 @@ function parseDOM(data) {
   arr = data.dom.split('>');
 
   data.dom = arr[0];
-  data.dom_inner = parseDOMInner(arr);
+  data.dom_inner = parseDOMInner(arr, parsers);
 
   return data;
 }
 
-function parseDOMInner(arr) {
+function parseDOMInner(arr, parsers) {
   var i = 1,
     l = arr.length,
     dom,
+    indent = '  ',
     str = '%%';
 
   for (; i < l; i++) {
-    str = parseDOMInnerElement(arr[i], str);
+    str = parseDOMInnerElement(arr[i], str, indent, parsers);
+    indent = indent + '  ';
   }
 
-  return str.replace('%%', '...');
+  return str.replace('%%', indent + '...');
 }
 
-function parseDOMInnerElement(dom, str)
-{
+/**
+ * @param {String} dom
+ * @param {String} str
+ */
+function parseDOMInnerElement(dom, str, indent, parsers) {
+  var pattern = /^([A-Z_]+)$/,
+    parser,
+    open,
+    close;
+
+  if (dom.match(pattern)) {
+    // It's a module!
+    return parseModuleInnerElement(dom, str, indent, parsers);
+  }
+
+  return parseSimpleDOMInnerElement(dom, str, indent);
+}
+
+function parseModuleInnerElement(dom, str, indent, parsers) {
+  var parser,
+    open,
+    close,
+    parts = [];
+
+  parser = parsers[dom];
+  open = parser.getDOM() + ' class="' + parser.getClass() + '"';
+  close = parser.getDOM();
+
+  parts.push(indent + '&lt;' + open + '&gt;');
+  parts.push('%%');
+  parts.push(indent + '&lt;/' + close + '&gt;');
+
+  return str.replace(
+    '%%',
+    parts.join('\n')
+  );
+}
+
+function parseSimpleDOMInnerElement(dom, str, indent) {
   var open = dom,
     close = dom,
     ind = dom.indexOf('.'),
-    arr;
+    arr,
+    parts = [];
 
   if (ind === 0) {
     open = 'div class="' + dom.substring(1) + '"';
@@ -76,8 +143,17 @@ function parseDOMInnerElement(dom, str)
     close = arr[0];
   }
 
-  return str.replace('%%', '&lt;' + open + '&gt; %% &lt;/' + close + '&gt;');
+  parts.push(indent + '&lt;' + open + '&gt;');
+  parts.push('%%');
+  parts.push(indent + '&lt;/' + close + '&gt;');
+
+  return str.replace(
+    '%%',
+    parts.join('\n')
+  );
 }
+
+// --------
 
 function parseContains(data) {
   var i,

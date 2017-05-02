@@ -38,14 +38,21 @@ exports.FileParser = {
   },
 
   parseTitle: function(test) {
-    var filepath, parser, parsed;
+    var filepath, parsers = [], parser, parsed;
 
     test.expect(7);
+
+    filepath = path.join(__dirname, './fixtures/docs/wrapper.yml');
+    parser = new FileParser(filepath, parsers);
+    parser.load();
+    parser.parse();
+    parsers[parser.getTitle()] = parser;
 
     // ----
 
     filepath = path.join(__dirname, './fixtures/docs/button_group.yml');
-    parser = new FileParser(filepath);
+    parser = new FileParser(filepath, parsers);
+    parser.load();
     parsed = parser.parse();
 
     test.equal(parsed.title, 'BUTTON_GROUP', 'Can parse the title.');
@@ -58,7 +65,8 @@ exports.FileParser = {
     // ----
 
     filepath = path.join(__dirname, './fixtures/docs/button.yml');
-    parser = new FileParser(filepath);
+    parser = new FileParser(filepath, parsers);
+    parser.load();
     parsed = parser.parse();
 
     test.equal(parsed.title, 'BUTTON', 'Can parse the title.');

@@ -2,6 +2,7 @@
 
 var fs = require('fs');
 var path = require('path');
+var FileParser = require('../tasks/FileParser');
 var HTMLGenerator = require('../tasks/HTMLGenerator');
 var ModuleData = require('../tasks/ModuleData');
 
@@ -40,29 +41,29 @@ exports.HTMLGenerator = {
   },
 
   generate: function(test) {
-    var moduledata, mod, templatepath, generator, markup, expected;
+    var filepath, parsers = [], parser, mod, moduledata, templatepath, generator, markup, expected;
 
     test.expect(1);
 
-    mod = {
-      title: 'BUTTON_GROUP',
-      description: 'A group that contains buttons',
-      dom: 'div',
-      dom_inner: '...',
-      class: 'ui-button-group',
-      options: [
-        {class: 'opt-foo', description: 'Adds that foo style!'}
-      ],
-      contains: [
-        {module: true, data: 'BUTTON', frequency: '+', frequency_str: 'multiple'}
-      ]
-    };
+    filepath = path.join(__dirname, './fixtures/docs/wrapper.yml');
+    parser = new FileParser(filepath, parsers);
+    parser.load();
+    parser.parse();
+    parsers[parser.getTitle()] = parser;
+
+    // ----
+
+    filepath = path.join(__dirname, './fixtures/docs/button_group.yml');
+    parser = new FileParser(filepath, parsers);
+    parser.load();
+    mod = parser.parse();
 
     moduledata = new ModuleData([
       {title: 'BUTTON'},
       {title: 'BUTTON_GROUP'},
       {title: 'FULLWIDTH_HEADER'},
-      {title: 'PAGE_CONTENT'}
+      {title: 'PAGE_CONTENT'},
+      {title: 'WRAPPER'}
     ]);
 
     generator = new HTMLGenerator(mod, moduledata);

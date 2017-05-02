@@ -1,6 +1,6 @@
 title: BUTTON_GROUP
 description: A group that contains buttons
-dom: div
+dom: div>WRAPPER
 class: ui-button-group
 contains:
   - BUTTON +

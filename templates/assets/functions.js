@@ -1,6 +1,6 @@
 (function() {
   var trees = document.getElementsByClassName('ui-tree'),
-    lis = trees[0].getElementsByTagName('li'),
+    lis = trees.length > 0 ? trees[0].getElementsByTagName('li') : [],
     li,
     i = 0,
     l = lis.length;

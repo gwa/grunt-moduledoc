@@ -163,6 +163,7 @@ ul.ui-tree span:before {
   height: 8px;
   border-left: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
+  cursor: pointer;
 }
 
 ul.ui-tree li.open > span:before {
