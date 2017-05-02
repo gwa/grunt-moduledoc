@@ -25,12 +25,14 @@ In your project's Gruntfile, add a section named `moduledoc` to the data object 
 ```js
 grunt.initConfig({
   moduledoc: {
-    options: {
-      // Task-specific options go here.
-    },
-    your_target: {
-      // Target-specific file lists and/or options go here.
-    },
+    my_target: {
+      options: {
+        // Task-specific options go here.
+      },
+      files: {
+        // Target-specific file lists and/or options go here.
+      }
+    }
   },
 });
 ```
@@ -56,10 +58,12 @@ Path to the assets directory.
 ```js
 grunt.initConfig({
   moduledoc: {
-    options: {},
-    files: {
-      'dest/docs': ['src/docs'],
-    },
+    dist: {
+      options: {},
+      files: {
+        'dest/docs': ['src/docs'],
+      },
+    }
   },
 });
 ```
