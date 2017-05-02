@@ -53,6 +53,9 @@ module.exports = function(grunt) {
         return;
       }
 
+      // Sort alphabetically
+      arr.sort(compare);
+
       moduledata = new ModuleData(arr);
 
       createModulePages(grunt, moduledata, options.templatepath, f.dest);
@@ -65,6 +68,15 @@ module.exports = function(grunt) {
   });
 
 };
+
+// Used to sort module data array by title.
+function compare(a,b) {
+  if (a.title < b.title)
+    return -1;
+  if (a.title > b.title)
+    return 1;
+  return 0;
+}
 
 function createModulePages(grunt, moduledata, templatedir, targetdir) {
   var i,
