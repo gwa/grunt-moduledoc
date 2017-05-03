@@ -34,6 +34,8 @@ FileParser.prototype.parse = function() {
   this.data = parseDOM(this.data, this.parsers);
   this.data = parseContains(this.data);
 
+  this.data.classes = this.getClasses();
+
   return this.data;
 }
 
@@ -56,6 +58,23 @@ FileParser.prototype.getDOM = function() {
  */
 FileParser.prototype.getClass = function() {
   return this.data.class;
+}
+
+/**
+ * @return {String}
+ */
+FileParser.prototype.getClasses = function() {
+  var classes = [];
+
+  if (this.data.type) {
+    classes.push(this.data.type);
+  }
+
+  if (this.data.class) {
+    classes.push(this.data.class);
+  }
+
+  return classes.join(' ');
 }
 
 function parseDOM(data, parsers) {

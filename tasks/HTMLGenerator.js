@@ -19,6 +19,7 @@ function HTMLGenerator(module, moduledata) {
 
   if (this.moduledata) {
     this.context.modules     = moduledata.getModules();
+    this.context.typeslist   = moduledata.getTypes();
     this.context.optionslist = moduledata.getOptions();
     this.context.tree        = renderTree(moduledata.getTree(), true);
   }

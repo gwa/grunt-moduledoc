@@ -21,7 +21,7 @@
     {{#if module.description}}
     <div class="description">{{module.description}}</div>
     {{/if}}
-    <pre><code class="language-markup">&lt;{{module.dom}}{{#if module.class}} class=&quot;{{module.class}}&quot;{{/if}}&gt;
+    <pre><code class="language-markup">&lt;{{module.dom}}{{#if module.classes}} class=&quot;{{module.classes}}&quot;{{/if}}&gt;
 {{{module.dom_inner}}}
 &lt;/{{module.dom}}&gt;</code></pre>
 
@@ -69,6 +69,20 @@
       </div>
 
       <div class="ui-col">
+        <h2>Types</h2>
+        <ul class="ui-options">
+          {{#each typeslist}}
+          <li>
+            <code>{{this.class}}</code>
+            <ul>
+              {{#each this.modules}}
+              <li><a href="{{this}}.html">{{this}}</a></li>
+              {{/each}}
+            </ul>
+          </li>
+          {{/each}}
+        </ul>
+
         <h2>Options</h2>
         <ul class="ui-options">
           {{#each optionslist}}

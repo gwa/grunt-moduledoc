@@ -14,6 +14,9 @@ function ModuleData(moduledata) {
   this.modulenames = [];
   this.indexmap = [];
 
+  this.types = undefined;
+  this.typesindex = [];
+
   this.options = undefined;
   this.optionsindex = [];
 
@@ -52,8 +55,46 @@ ModuleData.prototype.getModule = function(name) {
 }
 
 /**
- * @todo refactor
- * @return {array}
+ * Parsers all modules to extract the used types.
+ *
+ * @return {Array}
+ */
+ModuleData.prototype.getTypes = function() {
+  var i, l, type, index;
+
+  if (typeof this.types === 'undefined') {
+    this.types = [];
+
+    for (i = 0, l = this.moduledata.length; i < l ;i++) {
+      type = this.moduledata[i].type;
+      if (!type) {
+        continue;
+      }
+
+      if (typeof this.typesindex[type] === 'undefined') {
+        index = this.types.length;
+        this.types.push({class: type, modules: []});
+        this.optionsindex[type] = index;
+      }
+
+      this.types[this.optionsindex[type]].modules.push(this.moduledata[i].title);
+    }
+
+    // sort
+    this.types = this.types.sort(function(a, b) {
+      if(a.class < b.class) return -1;
+      if(a.class > b.class) return 1;
+      return 0;
+    });
+  }
+
+  return this.types;
+}
+
+/**
+ * Parsers all modules to extract the used options.
+ *
+ * @return {Array}
  */
 ModuleData.prototype.getOptions = function() {
   var i, l, j, m, opts, index;
@@ -61,7 +102,7 @@ ModuleData.prototype.getOptions = function() {
   if (typeof this.options === 'undefined') {
     this.options = [];
     for (i = 0, l = this.moduledata.length; i < l ;i++) {
-      var opts = this.moduledata[i].options;
+      opts = this.moduledata[i].options;
       if (!opts) {
         continue;
       }
