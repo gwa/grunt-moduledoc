@@ -140,6 +140,51 @@ Modules with `?` are considered _optional_.
 Modules with `+` are considered _multiple_ (i.e. one or more occurances).
 Modules with `*` are considered both _optional and multiple_ (i.e. zero, one or more occurances).
 
+### Inner DOM wrappers
+
+A module might often contain an _inner wrapper_ that in turn contains the contained modules.
+
+You can document this by adding it to the `dom` setting.
+
+```yaml
+dom: div>div.wrapper
+class: ui-block
+```
+
+defines:
+
+```markup
+<div class="ui-block">
+  <div class="wrapper">
+    <!-- modules go here -->
+  </div>
+</div>
+```
+
+You can also define the wrapper as its own module, e.g. `WRAPPER`, and then use that:
+
+```yaml
+name: WRAPPER
+dom: div
+class: ui-wrapper
+```
+
+```yaml
+name: BLOCK
+dom: div>WRAPPER
+class: ui-block
+```
+
+defines:
+
+```markup
+<div class="ui-block">
+  <div class="ui-wrapper">
+    <!-- modules go here -->
+  </div>
+</div>
+```
+
 ## The "moduledoc" task
 
 ### Overview
