@@ -229,7 +229,7 @@ grunt.initConfig({
     dist: {
       options: {},
       files: {
-        'dest/docs': ['src/docs'],
+        'dest/docs': ['src/docs/*.yml'],
       },
     }
   },
